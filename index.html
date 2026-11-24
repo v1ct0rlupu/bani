@@ -2,55 +2,77 @@
 <html lang="ro">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ff6200">
+<meta name="description" content="Challenge de educație financiară: 10 zile, decizii reale, bani virtuali. Cumpăr sau aștept?">
 <title>Cumpăr sau aștept?</title>
 <style>
-:root{--or:#ff6200;--or2:#e55800;--bg:#f3f3f3;--ink:#1d1d1b;--mute:#6f6f6f;--line:#e2e2e2;--green:#0a8a4f;--red:#d6293e}
+:root{--or:#ff6200;--or2:#e55800;--or-soft:#fff3eb;--bg:#f3f3f3;--ink:#1d1d1b;--mute:#6f6f6f;--line:#e2e2e2;--green:#0a8a4f;--green-bg:#e8f6ef;--red:#d6293e;--red-bg:#fceaea}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-#app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:76px}
+html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+#app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:calc(76px + env(safe-area-inset-bottom,0))}
 .top{background:var(--or);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
 .top b{font-size:1.1rem}.top button{width:auto;background:none;border:1px solid #fff9;color:#fff;padding:6px 12px;border-radius:99px;margin:0;font-size:.85rem}
 .pad{padding:16px}
 .bal{background:var(--or);color:#fff;padding:6px 18px 26px;border-radius:0 0 26px 26px}
-.bal small{opacity:.85}.bal .n{font-size:2.5rem;font-weight:800;letter-spacing:-.02em}
+.bal small{opacity:.85;display:block}.bal .n{font-size:2.5rem;font-weight:800;letter-spacing:-.02em}
 .card{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px #0000000d}
 .card h3{margin:0 0 8px;font-size:1rem}
-.bar{height:10px;background:var(--line);border-radius:99px;position:relative;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--or);border-radius:99px;transition:width .5s}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--or);border-radius:99px;transition:width .4s}
 .mute{color:var(--mute);font-size:.88rem}
 button{font:inherit;width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:13px 14px;margin-top:9px;cursor:pointer}
-button:hover,button:focus-visible{border-color:var(--or);outline:none}
+button:hover,button:focus-visible{border-color:var(--or);outline:2px solid var(--or);outline-offset:2px}
 button.p{background:var(--or);border-color:var(--or);color:#fff;text-align:center;font-weight:700}
 button.p:hover{background:var(--or2)}
 button.w{border-style:dashed;border-color:var(--or);color:var(--or2);font-weight:600}
-input,select{font:inherit;width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;margin-top:9px;background:#fff}
-input:focus,select:focus{border-color:var(--or);outline:none}
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:auto;background:#fff;border-top:1px solid var(--line);display:flex}
-.nav button{border:0;border-radius:0;margin:0;text-align:center;padding:14px 0;font-weight:600;color:var(--mute);font-size:.85rem}
+button.ghost{background:transparent;border-color:var(--line);text-align:center}
+input,select,textarea{font:inherit;width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;margin-top:9px;background:#fff}
+input:focus,select:focus,textarea:focus{border-color:var(--or);outline:none}
+.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:auto;background:#fff;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0);z-index:40}
+.nav button{border:0;border-radius:0;margin:0;text-align:center;padding:12px 0 10px;font-weight:600;color:var(--mute);font-size:.72rem;display:flex;flex-direction:column;align-items:center;gap:2px}
 .nav button.on{color:var(--or);box-shadow:inset 0 3px var(--or)}
+.nav button svg{width:20px;height:20px}
 .tx{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
 .tx:last-child{border:0}.neg{color:var(--ink);font-weight:700;white-space:nowrap}.pos{color:var(--green);font-weight:700}
-.tag{display:inline-block;font-size:.78rem;font-weight:700;padding:2px 9px;border-radius:99px;color:#fff;background:var(--green)}.tag.bad{background:var(--red)}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;padding:2px 9px;border-radius:99px;color:#fff;background:var(--green)}.tag.bad{background:var(--red)}.tag.info{background:var(--or)}
 .big{font-size:2.4rem;font-weight:800;line-height:1.1}
 .err{color:var(--red);font-size:.9rem;margin-top:8px}
-.login{padding:40px 22px}.login h1{margin:0 0 6px;color:var(--or);font-size:2rem;line-height:1.1}
+.ok{color:var(--green);font-size:.9rem;margin-top:8px}
+.login{padding:36px 22px 100px}.login h1{margin:0 0 6px;color:var(--or);font-size:2rem;line-height:1.1}
+.logo-mark{width:56px;height:56px;border-radius:16px;background:var(--or);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.4rem;margin-bottom:14px}
 .lb-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .lb-row:last-child{border:0}
-.lb-rank{width:28px;height:28px;border-radius:50%;background:#fff3eb;color:var(--or);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
+.lb-rank{width:28px;height:28px;border-radius:50%;background:var(--or-soft);color:var(--or);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
 .lb-rank.top{background:var(--or);color:#fff}
-.lb-info{flex:1;min-width:0}.lb-info b{display:block}.lb-score{font-weight:800;color:var(--ink);white-space:nowrap}
+.lb-info{flex:1;min-width:0}.lb-info b{display:block}.lb-score{font-weight:800;white-space:nowrap}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90%;text-align:center}
 .toast.show{opacity:1}
 label.chk{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.9rem;cursor:pointer}
 label.chk input{width:auto;margin:0}
+.statg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat{background:var(--or-soft);border-radius:12px;padding:14px;text-align:center}
+.stat .n{font-size:1.5rem;font-weight:800;color:var(--or2)}.stat .l{font-size:.75rem;color:var(--mute)}
+.note{background:var(--or-soft);border-radius:12px;padding:12px 14px;font-size:.82rem;color:var(--or2);margin:12px 0;line-height:1.45}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{flex:1;text-align:center;margin:0;padding:10px;font-weight:600}
+.tabs button.on{background:var(--or);border-color:var(--or);color:#fff}
+.admin{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+.admin textarea{min-height:120px;font-family:ui-monospace,monospace;font-size:.8rem}
+.pub-hero{background:var(--or);color:#fff;padding:28px 20px 32px;border-radius:0 0 28px 28px}
+.pub-hero h1{margin:0 0 6px;font-size:1.75rem}.pub-hero p{margin:0;opacity:.9;font-size:.95rem}
+.chip{display:inline-block;background:#fff3;border:1px solid #fff5;border-radius:99px;padding:4px 12px;font-size:.8rem;margin-top:12px}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 <div id="app"></div>
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status"></div>
 <script>
 const ROUND=10, START=500, GOAL=300;
+const ADMIN_PASS='schimba-parola-admin';
 const o=(l,d,r,t,w)=>({l,d,r,t,w});
 const P=[
 ["Prietenii vor la pizza după școală. Costă 40 lei.",[o("Merg",-40,0,"O ieșire planificată e un cost asumat, nu o greșeală."),o("Nu merg",0,0,"Ai păstrat banii, dar ai ratat ieșirea. Economia nu înseamnă să renunți la tot."),o("Aștept 24h și propun un loc mai ieftin",-15,0,"Ați ieșit la un loc mai ieftin: 15 lei în loc de 40.",1)]],
@@ -65,155 +87,425 @@ const P=[
 ["Un mesaj pe Instagram: „Dă-ne parola contului ca să primești o reducere.”",[o("Le dau parola",-40,1,"Ți-au preluat contul și au cerut bani prietenilor tăi în numele tău. Te-a costat 40 lei și multă încredere."),o("Blochez contul și raportez",0,0,"Nicio platformă sau magazin nu îți cere parola."),o("Aștept 24h și verific profilul",0,0,"Contul era creat de o zi. Ai observat semnele unei înșelătorii.",1)]],
 ["Ai primit 200 lei de ziua ta.",[o("Cheltui tot în weekend",-200,1,"Weekendul a fost fain, dar luni nu mai aveai nimic."),o("Pun 100 deoparte și cheltui 100",-100,0,"Te-ai bucurat de bani și ți-ai păstrat o parte."),o("Aștept 24h și fac un plan",-60,0,"Ai cheltuit 60 pe ce voiai cu adevărat și ai păstrat restul.",1)]],
 ["Livrare de mâncare: 45 lei. Ai mâncare acasă, dar nu ai chef de ea.",[o("Comand",-45,1,"Ai mâncat și mâncarea de acasă a doua zi. Ai plătit de două ori."),o("Mănânc ce am acasă",0,0,"Ai economisit 45 lei."),o("Aștept 24h",0,0,"Ți-a trecut pofta. Nu ai comandat.",1)]],
-["Ploaie ușoară. O cursă cu Bolt costă 25 lei, pe jos faci 20 minute.",[o("Comand cursa",-25,1,"Ploaia s-a oprit după 5 minute."),o("Merg pe jos",0,0,"Ai ajuns ud puțin, dar ai păstrat banii."),o("Aștept 10 minute",0,0,"Ploaia a trecut și ai mers fără cheltuială.",1)]],
+["Ploaie ușoară. O cursă cu aplicația de transport costă 25 lei, pe jos faci 20 minute.",[o("Comand cursa",-25,1,"Ploaia s-a oprit după 5 minute."),o("Merg pe jos",0,0,"Ai ajuns ud puțin, dar ai păstrat banii."),o("Aștept 10 minute",0,0,"Ploaia a trecut și ai mers fără cheltuială.",1)]],
 ["Un prieten îți cere 50 lei împrumut: „Ți-i dau vineri.”",[o("Îi dau 50 lei",-50,1,"Vinerea a trecut. Nu ți-a dat banii și e stânjenitor să-i ceri."),o("Îi dau 20 lei și spun că sunt un cadou",-20,0,"Ai ajutat fără să aștepți banii înapoi."),o("Refuz politicos",0,0,"Ai păstrat banii și prietenia.")]],
 ["Un magazin îți oferă telefon pe rate 0%: „doar 99 lei/lună” timp de 12 luni.",[o("Iau telefonul pe rate",-99,1,"Pe lângă prima rată, ai un angajament de 1.188 lei. Dacă pierzi un avans, apar penalități."),o("Economisesc pentru el",0,0,"Îl cumperi când ai banii, fără datorii."),o("Aștept 24h și calculez totalul",0,0,"Ai observat că suma finală e mai mare decât prețul de raft.",1)]],
 ["Un joc îți propune un pachet cu premii aleatorii, 30 lei.",[o("Cumpăr 1 pachet",-30,1,"Ai primit obiecte pe care nu le vrei. Probabilitatea de premii mari e foarte mică."),o("Cumpăr 3 „că poate iese”",-90,1,"Fiecare pachet e un nou joc de noroc. Ai cheltuit 90 lei."),o("Nu cumpăr",0,0,"Ai ieșit din capcana „încă unul”.")]],
-["Streamerul tău preferat scoate merch: tricou 90 lei.",[o("Îl cumpăr",-90,1,"Îl porți de două ori. Entuziasmul a trecut repede."),o("Îl pun pe lista de dorințe pentru 30 de zile",0,0,"După o lună nu mai voiai tricoul. Ai verificat dacă dorința rămâne.",1),o("Nu îl cumpăr",0,0,"Îl poți urmări și fără tricou.")]],
+["Un creator de conținut scoate merch: tricou 90 lei.",[o("Îl cumpăr",-90,1,"Îl porți de două ori. Entuziasmul a trecut repede."),o("Îl pun pe lista de dorințe pentru 30 de zile",0,0,"După o lună nu mai voiai tricoul. Ai verificat dacă dorința rămâne.",1),o("Nu îl cumpăr",0,0,"Îl poți urmări și fără tricou.")]],
 ["Cafea la 15 lei în fiecare dimineață, doar „să te trezești”.",[o("Continui cu cafeaua zilnică",-60,1,"4 cafele = 60 lei în doar 4 zile. Obiceiul costă mai mult decât crezi."),o("Fac cafea acasă",-10,0,"Același efect, mult mai ieftin."),o("Cumpăr doar vinerea",-15,0,"Ai păstrat plăcerea, dar fără să te coste prea mult.")]],
 ["Magazin: „2+1 gratis” la gustări. Tu voiai doar una (15 lei).",[o("Iau 3 (30 lei)",-30,1,"Ai mâncat gustările în aceeași zi. Nu ai economisit, ai cheltuit mai mult."),o("Iau doar una",-15,0,"Ai luat exact ce voiai."),o("Iau 3 și împart cu doi prieteni",-10,0,"Promoția a funcționat pentru tine. Ai plătit 10 lei, iar ei au dat câte 10.",1)]],
 ["Bilet la un concert: 150 lei. Dacă îl iei, scazi sub obiectivul tău.",[o("Îl iau",-150,1,"Concertul a fost bun, dar nu mai ai bani pentru nimic în restul lunii."),o("Nu îl iau",0,0,"Ai ales obiectivul. Concertul poate veni și mai târziu."),o("Aștept 24h și caut o variantă mai ieftină",-60,0,"Ai găsit un bilet la tribună cu 60 lei, aproape la fel de bun.",1)]],
 ["Black Friday: coș cu haine de 120 lei, cu cod de reducere de 20%.",[o("Plătesc 96 lei",-96,1,"Din 5 articole porți doar 2. Reducerea te-a convins să iei și ce nu aveai nevoie."),o("Păstrez doar ce voiam (40 lei)",-40,0,"Ai ales o parte din coș și ai scăpat de impuls."),o("Aștept 24h",0,0,"Ai renunțat la coș. Nu ai simțit lipsa niciunei haine.",1)]],
-["Ai ajutat un vecin cu o treabă și ți-a dat 50 lei.",[o("Cheltuiesc imediat 50 lei",-0,1,"Banii au dispărut pe lucruri mărunte fără să-ți dai seama."),o("Pun 30 lei deoparte și păstrez 20 pentru mine",50,0,"Ai +50 lei și ți-ai păstrat o parte pentru obiectiv."),o("Pun toți banii deoparte",50,0,"Ai +50 lei. Ai câștigat și ai economisit.")]],
-["Ai luat o notă mare și vrei să te „răsplătești” cu o ieșire de 70 lei.",[o("Ieșire de 70 lei",-70,1,"Te-ai bucurat, dar ai simțit că meritai ceva diferit."),o("Aleg un lucru de 20 lei",-20,0,"Răsplata a fost mică, dar semnificativă."),o("Aștept 24h și aleg ceva din lista mea",-35,0,"Ai ales ceva care chiar te bucură, la un preț rezonabil.",1)]]
+["Ai ajutat un vecin cu o treabă și ți-a dat 50 lei.",[o("Cheltuiesc imediat 50 lei",0,1,"Banii au dispărut pe lucruri mărunte fără să-ți dai seama. Soldul n-a crescut real."),o("Pun 30 lei deoparte și păstrez 20",50,0,"Ai +50 lei și ți-ai păstrat o parte pentru obiectiv."),o("Pun toți banii deoparte",50,0,"Ai +50 lei. Ai câștigat și ai economisit.")]],
+["Ai luat o notă mare și vrei să te „răsplătești” cu o ieșire de 70 lei.",[o("Ieșire de 70 lei",-70,1,"Te-ai bucurat, dar ai simțit că meritai ceva diferit."),o("Aleg un lucru de 20 lei",-20,0,"Răsplata a fost mică, dar semnificativă."),o("Aștept 24h și aleg ceva din lista mea",-35,0,"Ai ales ceva care chiar te bucură, la un preț rezonabil.",1)]],
+["Abonament la o aplicație de muzică: 25 lei/lună. Asculți rar.",[o("Reînnoiesc",-25,1,"Plătești din inerție pentru ceva ce abia folosești."),o("Anulez",0,0,"Ai tăiat o cheltuială pasivă."),o("Aștept 24h",0,0,"Ai verificat istoricul de ascultare și ai anulat.",1)]],
+["Colegul propune un joc de noroc online „doar de 20 lei”.",[o("Pun 20 lei",-20,1,"Ai pierdut. Jocurile de noroc sunt făcute să câștige casa."),o("Refuz",0,0,"Ai evitat un risc inutil."),o("Aștept 24h",0,0,"Ai citit despre riscuri. Ai decis să nu.",1)]],
+["Vrei un rucsac nou: 180 lei. Ai unul vechi care încă ține.",[o("Îl cumpăr",-180,1,"Upgrade de imagine, nu de nevoie."),o("Repar / folosesc ce am",0,0,"Ai economisit o sumă mare."),o("Aștept 24h",0,0,"Nu mai era urgent a doua zi.",1)]],
+["Mesaj pe rețeaua socială: „Investește cu mine, ghid premium 40 lei.”",[o("Plătesc 40 lei",-40,1,"Nu există ghid. E o țeapă clasică."),o("Blochez și raportez",0,0,"Reacție corectă."),o("Aștept 24h și verific",0,0,"Multe rapoarte de fraudă. Ai evitat-o.",1)]],
+["La checkout online apare „Adaugă și asta” — un produs de 19 lei.",[o("Adaug",-19,1,"Upsell clasic. Nu era pe lista ta."),o("Finalizez fără el",0,0,"Listele bat recomandările."),o("Aștept 24h",0,0,"Ai anulat impulsul de la finalul comenzii.",1)]],
+["Prietenii împart nota egal. Tu ai consumat 25 lei, partea 50.",[o("Plătesc 50",-50,1,"Ai subvenționat pe alții. Pe termen lung e frustrant."),o("Cer plata pe ce am consumat",-25,0,"Corect și asertiv."),o("Aștept și discut calm",-25,0,"Fiecare a plătit ce a comandat.",1)]],
+["Oferă-ți un „zi fără cheltuieli”. Ai mâncare acasă.",[o("Totuși cumpăr ceva mic (15 lei)",-15,1,"Ziua zero a eșuat pe un impuls."),o("Reușesc 0 lei azi",0,0,"Disciplină practică!"),o("Planific ziua fără cheltuieli",0,0,"Ai reușit prin pregătire.",1)]]
 ];
 
 const $=document.getElementById('app');
+const LS_U='cob_users_v2', LS_C='cob_cur_v2', LS_PUB='cob_public_results';
 const J=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)||'null'):localStorage.setItem(k,JSON.stringify(v));
-let users=J('cob_users')||{},cur=J('cob_cur'),tab='home',err='';
-let lbData=null, lbStatus='';
+let users=J(LS_U)||{}, cur=J(LS_C), tab='home', err='', authMode='login';
+let lbOfficial=null, lbStatus='', adminRows=[];
 
-const DEMO_LB=[
-  {nick:'demo_alex',class:'10',balance:420,regrets:2,pauses:4,hide:false,demo:true},
-  {nick:'demo_mira',class:'11',balance:380,regrets:3,pauses:3,hide:false,demo:true},
-  {nick:'demo_radu',class:'9',balance:310,regrets:5,pauses:2,hide:false,demo:true},
-  {nick:'demo_ioana',class:'12',balance:450,regrets:1,pauses:5,hide:false,demo:true},
-  {nick:'demo_andrei',class:'10',balance:290,regrets:6,pauses:1,hide:false,demo:true},
-  {nick:'demo_elena',class:'11',balance:360,regrets:3,pauses:4,hide:false,demo:true},
-  {nick:'demo_vlad',class:'9',balance:400,regrets:2,pauses:5,hide:false,demo:true},
-  {nick:'demo_sofia',class:'12',balance:340,regrets:4,pauses:2,hide:false,demo:true}
-];
+const ICO={
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V12h6v9"/></svg>',
+  hist:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+  lb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M6 4h12v5a6 6 0 01-12 0V4z"/></svg>',
+  me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'
+};
 
+async function sha256(t){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
 const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
-const U=()=>users[cur],save=()=>{J('cob_users',users);J('cob_cur',cur)};
-const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)};
+const U=()=>users[cur];
+const save=()=>{J(LS_U,users);J(LS_C,cur)};
+const toast=m=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)};
+const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
+
+function publicList(){return J(LS_PUB)||[]}
+function savePublic(list){J(LS_PUB,list)}
 
 function newRound(u){
-  let pool=P.map((_,i)=>i).filter(i=>!u.seen.includes(i));
+  let pool=P.map((_,i)=>i).filter(i=>!(u.seen||[]).includes(i));
   if(pool.length<ROUND){u.seen=[];pool=P.map((_,i)=>i)}
-  u.q=sh(pool).slice(0,ROUND);u.seen.push(...u.q);
-  u.b=START;u.i=0;u.r=0;u.w=0;u.res=null;u.rounds++;
+  u.q=sh(pool).slice(0,ROUND);u.seen=[...(u.seen||[]),...u.q];
+  u.b=START;u.i=0;u.r=0;u.w=0;u.res=null;u.rounds=(u.rounds||0)+1;u.finishedRound=false;
 }
 
-function resultCode(u){
-  return btoa(unescape(encodeURIComponent(JSON.stringify({
-    nick:cur,class:u.cls||'',balance:u.b,regrets:u.r,pauses:u.w,hide:!!u.hide,
-    date:new Date().toISOString().slice(0,10),demo:false
-  }))));
+function bestScore(u){
+  if(!u.best||u.b>u.best.balance) u.best={balance:u.b,regrets:u.r,pauses:u.w,date:new Date().toISOString().slice(0,10)};
 }
 
-async function copyCode(u){
-  const code=resultCode(u);
-  try{await navigator.clipboard.writeText(code);toast('Cod copiat!');}
-  catch{prompt('Copiază codul:',code)}
+function resultObj(u){
+  return {nick:cur,class:u.cls||'',balance:u.b,regrets:u.r,pauses:u.w,hide:!!u.hide,rounds:u.rounds||1,date:new Date().toISOString().slice(0,10),demo:false};
+}
+function resultCode(u){return btoa(unescape(encodeURIComponent(JSON.stringify(resultObj(u)))))}
+function decodeCode(c){try{return JSON.parse(decodeURIComponent(escape(atob(c.trim()))))}catch{return null}}
+
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t);toast('Copiat!');}
+  catch{prompt('Copiază:',t)}
 }
 
+function publishLocal(u){
+  if(u.hide){toast('Ai ales să nu apari în clasament');return}
+  const row=resultObj(u);
+  let list=publicList().filter(x=>x.nick!==row.nick);
+  list.push(row);
+  savePublic(list);
+  toast('Rezultatul tău e vizibil local în clasament');
+}
+
+/* ===== PUBLIC LANDING (fără login) ===== */
+function landing(){
+  tab='public';
+  $.innerHTML=`<div class="pub-hero"><div class="logo-mark" style="background:#fff;color:var(--or)">C?</div>
+    <h1>Cumpăr sau aștept?</h1>
+    <p>Challenge de educație financiară pentru liceeni. 10 zile · 500 lei virtuali · obiectiv 300 lei.</p>
+    <span class="chip">Clasament public · rezultate reale</span></div>
+  <div class="pad">
+    <div class="card"><h3>Cum funcționează</h3>
+      <p class="mute">În fiecare zi primești o situație realistă (reduceri, abonamente, fraude, presiunea prietenilor…). Confirmi, refuzi sau aștepți 24h. Pauza reduce regretul.</p>
+      <button class="p" id="go-in">Intră / creează cont</button>
+      <button class="ghost" id="go-lb">Vezi clasamentul public</button>
+    </div>
+    <div class="card"><h3>Clasament (previzualizare)</h3><div id="land-lb"><p class="mute">Se încarcă…</p></div></div>
+  </div>`;
+  document.getElementById('go-in').onclick=()=>login();
+  document.getElementById('go-lb').onclick=()=>{tab='lb';if(cur)leaderboard();else publicLeaderboard()};
+  loadLB().then(data=>{
+    const el=document.getElementById('land-lb'); if(!el)return;
+    const rows=mergeLB(data).filter(r=>!r.hide).sort((a,b)=>b.balance-a.balance||a.regrets-b.regrets).slice(0,5);
+    el.innerHTML=rows.length?rows.map((r,i)=>lbRow(r,i)).join(''):'<p class="mute">Încă nu sunt rezultate publice.</p>';
+  });
+}
+
+function publicLeaderboard(){
+  $.innerHTML=`<div class="top"><b>Clasament public</b><button onclick="landing()">Înapoi</button></div>
+  <div class="pad"><div class="card"><h3>Rezultate</h3>
+  <p class="mute" id="lb-st">Se încarcă…</p>
+  <select id="lb-f"><option value="all">Toate clasele</option><option value="9">a IX-a</option><option value="10">a X-a</option><option value="11">a XI-a</option><option value="12">a XII-a</option></select>
+  <div id="lb-list" style="margin-top:8px"></div>
+  <button class="p" id="go-in2" style="margin-top:16px">Vreau să particip</button>
+  </div></div>`;
+  document.getElementById('go-in2').onclick=()=>login();
+  fillLeaderboard();
+}
+
+/* ===== AUTH ===== */
 function login(){
-  $.innerHTML=`<div class="login"><h1>Cumpăr sau aștept?</h1><p class="mute">Cont de simulare. Banii sunt virtuali, deciziile sunt reale.</p>
-  <p class="mute" style="margin-top:8px">Datele rămân pe dispozitivul tău, în afară de codul de rezultat pe care îl trimiți tu.</p>
-  <input id="u" placeholder="Poreclă (fără nume real)" autocomplete="username">
-  <select id="cls"><option value="9">Clasa a IX-a</option><option value="10">Clasa a X-a</option><option value="11">Clasa a XI-a</option><option value="12">Clasa a XII-a</option></select>
-  <input id="p" type="password" inputmode="numeric" placeholder="PIN (minim 4 cifre)" autocomplete="current-password">
-  <div class="err">${err}</div><button class="p" id="in">Intră în cont</button><button id="up">Creează cont nou</button></div>`;
-  const g=()=>[document.getElementById('u').value.trim().toLowerCase().replace(/\s+/g,'_'),document.getElementById('p').value,document.getElementById('cls').value];
-  document.getElementById('in').onclick=()=>{const[n,p]=g();if(users[n]&&users[n].pin===p){cur=n;err='';save();home()}else{err='Poreclă sau PIN greșit.';login()}};
-  document.getElementById('up').onclick=()=>{const[n,p,cls]=g();if(n.length<3||p.length<4){err='Poreclă minim 3 caractere, PIN minim 4 cifre.';return login()}
-    if(users[n]){err='Porecla există deja. Alege alta.';return login()}
-    users[n]={pin:p,cls,b:START,i:0,r:0,w:0,q:[],seen:[],h:[],rounds:0,res:null,hide:false};newRound(users[n]);cur=n;err='';save();home()};
+  $.innerHTML=`<div class="login">
+  <div class="logo-mark">C?</div>
+  <h1>Cumpăr sau aștept?</h1>
+  <p class="mute">Cont de simulare. Banii sunt virtuali — deciziile te învață ceva real.</p>
+  <div class="tabs"><button class="${authMode==='login'?'on':''}" id="t-in">Intră</button><button class="${authMode==='reg'?'on':''}" id="t-up">Cont nou</button></div>
+  <div id="form"></div>
+  <p class="mute" style="margin-top:16px"><a href="#" id="to-land" style="color:var(--or)">← Clasament public</a></p>
+  </div>`;
+  document.getElementById('t-in').onclick=()=>{authMode='login';login()};
+  document.getElementById('t-up').onclick=()=>{authMode='reg';login()};
+  document.getElementById('to-land').onclick=e=>{e.preventDefault();landing()};
+  const f=document.getElementById('form');
+  if(authMode==='login'){
+    const names=Object.keys(users);
+    f.innerHTML=`${names.length?`<select id="u">${names.map(n=>`<option value="${esc(n)}">${esc(n)} (cl. ${users[n].cls||'?'})</option>`).join('')}</select>`:`<input id="u" placeholder="Poreclă">`}
+      <input id="p" type="password" inputmode="numeric" placeholder="PIN" autocomplete="current-password">
+      <div class="err">${err}</div><button class="p" id="in">Intră în cont</button>`;
+    document.getElementById('in').onclick=doLogin;
+  }else{
+    f.innerHTML=`<div class="note">Datele sunt anonime și rămân pe dispozitivul tău. În clasamentul public apare doar porecla, clasa și scorul — dacă alegi să le publici.</div>
+      <input id="u" placeholder="Poreclă (fără nume real)" maxlength="20">
+      <select id="cls"><option value="9">Clasa a IX-a</option><option value="10">Clasa a X-a</option><option value="11">Clasa a XI-a</option><option value="12">Clasa a XII-a</option></select>
+      <input id="p" type="password" inputmode="numeric" placeholder="PIN (minim 4 cifre)" autocomplete="new-password">
+      <input id="p2" type="password" inputmode="numeric" placeholder="Confirmă PIN" autocomplete="new-password">
+      <div class="err">${err}</div><button class="p" id="up">Creează cont</button>`;
+    document.getElementById('up').onclick=doRegister;
+  }
 }
 
-const nav=()=>`<div class="nav">
-  <button class="${tab=='home'?'on':''}" onclick="tab='home';home()">Acasă</button>
-  <button class="${tab=='hist'?'on':''}" onclick="tab='hist';hist()">Istoric</button>
-  <button class="${tab=='lb'?'on':''}" onclick="tab='lb';leaderboard()">Clasament</button>
-</div>`;
-const head=()=>`<div class="top"><b>Salut, ${cur}</b><button onclick="cur=null;save();login()">Ieși</button></div>`;
+async function doLogin(){
+  const n=(document.getElementById('u').value||'').trim().toLowerCase();
+  const p=document.getElementById('p').value;
+  if(!users[n]){err='Cont inexistent pe acest dispozitiv.';return login()}
+  const h=await sha256(p);
+  if(users[n].pin!==h && users[n].pin!==p){err='PIN greșit.';return login()}
+  if(users[n].pin===p){users[n].pin=h;save()}
+  cur=n;err='';save();home();
+}
+async function doRegister(){
+  const n=(document.getElementById('u').value||'').trim().toLowerCase().replace(/\s+/g,'_');
+  const p=document.getElementById('p').value, p2=document.getElementById('p2').value;
+  const cls=document.getElementById('cls').value;
+  if(n.length<3){err='Porecla: minim 3 caractere.';return login()}
+  if(!/^\d{4,8}$/.test(p)){err='PIN: 4–8 cifre.';return login()}
+  if(p!==p2){err='PIN-urile nu coincid.';return login()}
+  if(users[n]){err='Porecla există deja pe acest dispozitiv.';return login()}
+  const h=await sha256(p);
+  users[n]={pin:h,cls,b:START,i:0,r:0,w:0,q:[],seen:[],h:[],rounds:0,res:null,hide:false,finishedRound:false,best:null};
+  newRound(users[n]);cur=n;err='';save();home();
+}
 
-function home(){const u=U();
-  if(u.i>=ROUND)return endR();
-  $.innerHTML=head()+`<div class="bal"><small>Cont curent</small><div class="n">${u.b} lei</div></div><div class="pad">
-  <div class="card"><h3>Obiectiv economii</h3><div class="bar"><i style="width:${Math.min(100,Math.max(0,u.b/GOAL*100))}%"></i></div>
-  <p class="mute" style="margin:8px 0 0">Păstrează cel puțin ${GOAL} lei până la final. Mai ai ${u.b>=GOAL?(u.b-GOAL)+' lei de cheltuit':'de recuperat '+(GOAL-u.b)+' lei'}.</p></div>
-  <div class="card"><h3>Ziua ${u.i+1} din ${ROUND}</h3><p class="mute">Ai o plată în așteptare. Poți să o confirmi, să o refuzi sau să aștepți 24 de ore.</p><button class="p" id="go">Vezi plata în așteptare</button></div></div>`+nav();
+/* ===== SHELL ===== */
+const head=()=>`<div class="top"><b>Salut, ${esc(cur)}</b><button onclick="logout()">Ieși</button></div>`;
+function nav(){
+  return `<div class="nav">
+  <button class="${tab=='home'?'on':''}" onclick="tab='home';home()">${ICO.home}Acasă</button>
+  <button class="${tab=='hist'?'on':''}" onclick="tab='hist';hist()">${ICO.hist}Istoric</button>
+  <button class="${tab=='lb'?'on':''}" onclick="tab='lb';leaderboard()">${ICO.lb}Clasament</button>
+  <button class="${tab=='me'?'on':''}" onclick="tab='me';profile()">${ICO.me}Profil</button>
+  </div>`;
+}
+function logout(){cur=null;save();landing()}
+
+/* ===== HOME / GAME ===== */
+function home(){
+  const u=U(); if(!u)return landing();
+  if(u.finishedRound||u.i>=ROUND)return endR();
+  tab='home';
+  const day=u.i+1, pct=Math.round(u.i/ROUND*100);
+  $.innerHTML=head()+`<div class="bal"><small>Sold virtual</small><div class="n">${u.b} lei</div>
+    <small>Obiectiv: minim ${GOAL} lei · Runda ${u.rounds}</small></div>
+  <div class="pad">
+  <div class="card"><h3>Progres rundă</h3>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <p class="mute" style="margin:8px 0 0">Ziua ${day} din ${ROUND} · ${u.r} regrete · ${u.w} pauze</p></div>
+  <div class="card"><h3>Plată în așteptare</h3>
+    <p class="mute">O situație realistă te așteaptă. Confirmă, refuză sau așteaptă 24h.</p>
+    <button class="p" id="go">Deschide ziua ${day}</button></div>
+  <div class="card"><h3>Sfat rapid</h3><p class="mute">Regretul vine din deciziile pe loc. Dacă nu e urgent, așteaptă — de multe ori pofta trece.</p></div>
+  </div>`+nav();
   document.getElementById('go').onclick=decide;
 }
 
-function decide(){const u=U();
-  if(u.res){const x=u.res;
-    $.innerHTML=head()+`<div class="pad"><div class="card"><span class="tag ${x.r?'bad':''}">${x.r?'Regret':'Decizie bună'}</span><p style="margin-top:10px">${x.t}</p>
-    <p class="mute">${x.d<0?'Ai cheltuit '+(-x.d)+' lei.':x.d>0?'Ai primit '+x.d+' lei.':'Nu ai cheltuit nimic.'}</p><button class="p" id="nx">${u.i>=ROUND-1?'Vezi rezultatul':'Ziua următoare'}</button></div></div>`+nav();
-    document.getElementById('nx').onclick=()=>{u.i++;u.res=null;save();home();scrollTo(0,0)};return}
-  const s=P[u.q[u.i]],opts=[...sh(s[1].filter(a=>!a.w)),...s[1].filter(a=>a.w)];
-  $.innerHTML=head()+`<div class="pad"><div class="card"><div class="mute">Plată în așteptare · Ziua ${u.i+1}</div><h3 style="font-size:1.2rem;margin-top:6px">${s[0]}</h3>
-  ${opts.map((a,k)=>`<button class="${a.w?'w':''}" data-k="${k}">${a.l}</button>`).join('')}</div></div>`+nav();
-  $.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{const a=opts[b.dataset.k];u.b+=a.d;u.r+=a.r;u.w+=a.w?1:0;u.res=a;
-    u.h.unshift({r:u.rounds,day:u.i+1,t:s[0],l:a.l,d:a.d,rg:a.r});save();decide()});
+function decide(){
+  const u=U();
+  if(u.res){
+    const x=u.res;
+    $.innerHTML=head()+`<div class="pad"><div class="card">
+      <span class="tag ${x.r?'bad':''}">${x.r?'Regret':'Decizie bună'}</span>
+      ${x.w?' <span class="tag info">pauză</span>':''}
+      <p style="margin-top:12px">${esc(x.t)}</p>
+      <p class="mute">${x.d<0?'Ai cheltuit '+(-x.d)+' lei.':x.d>0?'Ai primit '+x.d+' lei.':'Nu ai cheltuit nimic.'} Sold: <b>${u.b} lei</b></p>
+      <button class="p" id="nx">${u.i>=ROUND-1?'Vezi rezultatul rundei':'Continuă — ziua '+(u.i+2)}</button>
+    </div></div>`+nav();
+    document.getElementById('nx').onclick=()=>{u.i++;u.res=null;if(u.i>=ROUND){u.finishedRound=true;bestScore(u)}save();home();scrollTo(0,0)};
+    return;
+  }
+  const s=P[u.q[u.i]], opts=[...sh(s[1].filter(a=>!a.w)),...s[1].filter(a=>a.w)];
+  $.innerHTML=head()+`<div class="pad"><div class="card">
+    <div class="mute">Ziua ${u.i+1} din ${ROUND} · Runda ${u.rounds}</div>
+    <h3 style="font-size:1.15rem;margin-top:6px">${esc(s[0])}</h3>
+    ${opts.map((a,k)=>`<button class="${a.w?'w':''}" data-k="${k}">${esc(a.l)}</button>`).join('')}
+  </div></div>`+nav();
+  $.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{
+    const a=opts[+b.dataset.k];
+    u.b=Math.max(0,u.b+a.d);u.r+=a.r;u.w+=a.w?1:0;u.res=a;
+    u.h.unshift({r:u.rounds,day:u.i+1,t:s[0],l:a.l,d:a.d,rg:a.r,w:!!a.w});
+    save();decide();
+  });
 }
 
-function hist(){const u=U();
-  $.innerHTML=head()+`<div class="pad"><div class="card"><h3>Istoric tranzacții</h3>${u.h.length?u.h.map(x=>`<div class="tx"><div><div>${x.l}</div><div class="mute">Runda ${x.r} · ziua ${x.day} ${x.rg?'· <span style="color:var(--red)">regret</span>':''}</div></div><div class="${x.d>0?'pos':'neg'}">${x.d>0?'+':''}${x.d} lei</div></div>`).join(''):'<p class="mute">Nu ai încă nicio decizie.</p>'}</div></div>`+nav();
+function hist(){
+  const u=U(); tab='hist';
+  $.innerHTML=head()+`<div class="pad"><div class="card"><h3>Istoric decizii</h3>
+  ${u.h&&u.h.length?u.h.map(x=>`<div class="tx"><div><div>${esc(x.l)}</div><div class="mute">Runda ${x.r} · ziua ${x.day}${x.rg?' · <span style="color:var(--red)">regret</span>':''}${x.w?' · pauză':''}</div></div>
+  <div class="${x.d>0?'pos':'neg'}">${x.d>0?'+':''}${x.d} lei</div></div>`).join(''):'<p class="mute">Nicio decizie încă. Deschide ziua de pe Acasă.</p>'}
+  </div></div>`+nav();
 }
 
-function endR(){const u=U(),ok=u.b>=GOAL;
-  $.innerHTML=head()+`<div class="pad"><div class="card"><h3>${ok?'Ai atins obiectivul':'Nu ai atins obiectivul'}</h3><p>Ai ${u.b} lei din ${START}. Ținta: ${GOAL}.</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0"><div><div class="big">${u.r}</div><span class="mute">decizii cu regret</span></div><div><div class="big">${u.w}</div><span class="mute">pauze de 24h</span></div></div>
-  <p class="mute">Regretul vine din deciziile luate pe loc. Pauza a funcționat de ${u.w} ori.</p>
-  <label class="chk"><input type="checkbox" id="hide" ${u.hide?'checked':''}> Nu mă arăta în clasament</label>
-  <button class="p" id="copy">Copiază codul meu de rezultat</button>
-  <button id="nr">Rundă nouă cu alte situații</button></div></div>`+nav();
+function endR(){
+  const u=U(), ok=u.b>=GOAL; tab='home';
+  $.innerHTML=head()+`<div class="bal"><small>Sold final rundă</small><div class="n">${u.b} lei</div>
+    <small>${ok?'Obiectiv atins':'Sub obiectivul de '+GOAL+' lei'}</small></div>
+  <div class="pad"><div class="card">
+    <h3>${ok?'Felicitări!':'Rundă terminată'}</h3>
+    <div class="statg"><div class="stat"><div class="n">${u.r}</div><div class="l">Regrete</div></div>
+    <div class="stat"><div class="n">${u.w}</div><div class="l">Pauze 24h</div></div></div>
+    <p class="mute">Regretul vine din deciziile pe loc. Pauza a funcționat de ${u.w} ori din ${ROUND}.</p>
+    <label class="chk"><input type="checkbox" id="hide" ${u.hide?'checked':''}> Nu mă arăta în clasament</label>
+    <button class="p" id="pub">Publică scorul în clasament</button>
+    <button id="copy">Copiază codul de rezultat</button>
+    <button id="nr">Rundă nouă (alte situații)</button>
+  </div>
+  <div class="card"><h3>Ce urmează?</h3>
+    <p class="mute">Trimite codul organizatorului pentru clasamentul oficial de pe site. Poți juca oricâte runde — apar situații noi.</p>
+  </div></div>`+nav();
   document.getElementById('hide').onchange=e=>{u.hide=e.target.checked;save()};
-  document.getElementById('copy').onclick=()=>copyCode(u);
-  document.getElementById('nr').onclick=()=>{newRound(u);save();tab='home';home()};
+  document.getElementById('pub').onclick=()=>{publishLocal(u);leaderboard()};
+  document.getElementById('copy').onclick=()=>copyText(resultCode(u));
+  document.getElementById('nr').onclick=()=>{newRound(u);save();home()};
+}
+
+/* ===== LEADERBOARD ===== */
+function lbRow(r,i){
+  return `<div class="lb-row"><div class="lb-rank${i<3?' top':''}">${i+1}</div>
+    <div class="lb-info"><b>${esc(r.nick)}</b><span class="mute">cl. ${esc(String(r.class))} · ${r.regrets} regrete · ${r.pauses||0} pauze${r.demo?' · demo':''}</span></div>
+    <div class="lb-score">${r.balance} lei</div></div>`;
+}
+
+function mergeLB(official){
+  const map={};
+  (official||[]).forEach(r=>{if(r&&r.nick)map[r.nick]=r});
+  publicList().forEach(r=>{
+    if(!r||!r.nick||r.hide)return;
+    const prev=map[r.nick];
+    if(!prev||r.balance>prev.balance||(r.balance===prev.balance&&r.regrets<(prev.regrets||99))) map[r.nick]=r;
+  });
+  return Object.values(map);
 }
 
 async function loadLB(){
-  if(lbData)return lbData;
+  if(lbOfficial)return lbOfficial;
   try{
-    const res=await fetch('data/results.json');
-    if(!res.ok)throw new Error('fail');
-    lbData=await res.json();
-    lbStatus='Clasament oficial';
+    const res=await fetch('data/results.json',{cache:'no-store'});
+    if(!res.ok)throw new Error('x');
+    lbOfficial=await res.json();
+    lbStatus='Clasament oficial + rezultate publicate local';
   }catch(e){
-    lbData=DEMO_LB;
-    lbStatus='Nu s-a putut încărca results.json — date demo';
+    lbOfficial=[];
+    lbStatus='Fără results.json pe server — se afișează doar ce e publicat din browsere + demo';
+    if(!publicList().length){
+      lbOfficial=[
+        {nick:'demo_alex',class:'10',balance:420,regrets:2,pauses:4,hide:false,demo:true},
+        {nick:'demo_mira',class:'11',balance:380,regrets:3,pauses:3,hide:false,demo:true},
+        {nick:'demo_radu',class:'9',balance:310,regrets:5,pauses:2,hide:false,demo:true},
+        {nick:'demo_ioana',class:'12',balance:450,regrets:1,pauses:5,hide:false,demo:true},
+        {nick:'demo_andrei',class:'10',balance:290,regrets:6,pauses:1,hide:false,demo:true},
+        {nick:'demo_elena',class:'11',balance:360,regrets:3,pauses:4,hide:false,demo:true},
+        {nick:'demo_vlad',class:'9',balance:400,regrets:2,pauses:5,hide:false,demo:true},
+        {nick:'demo_sofia',class:'12',balance:340,regrets:4,pauses:2,hide:false,demo:true}
+      ];
+      lbStatus='Date demo (înlocuiește data/results.json pe GitHub pentru clasament real)';
+    }
   }
-  return lbData;
+  return lbOfficial;
 }
 
-async function leaderboard(){
-  $.innerHTML=head()+`<div class="pad"><div class="card"><h3>Clasament</h3><p class="mute" id="lb-st">Se încarcă…</p>
-  <select id="lb-f"><option value="all">Toate clasele</option><option value="9">a IX-a</option><option value="10">a X-a</option><option value="11">a XI-a</option><option value="12">a XII-a</option></select>
-  <div id="lb-list" style="margin-top:8px"></div></div></div>`+nav();
+async function fillLeaderboard(){
   const data=await loadLB();
-  const st=document.getElementById('lb-st');
-  if(st)st.textContent=lbStatus;
+  const st=document.getElementById('lb-st'); if(st)st.textContent=lbStatus;
   const render=()=>{
-    const f=document.getElementById('lb-f').value;
-    let rows=(data||[]).filter(r=>!r.hide);
+    const f=(document.getElementById('lb-f')||{}).value||'all';
+    let rows=mergeLB(data).filter(r=>!r.hide);
     if(f!=='all')rows=rows.filter(r=>String(r.class)===f);
     rows.sort((a,b)=>b.balance!==a.balance?b.balance-a.balance:a.regrets-b.regrets);
-    const list=document.getElementById('lb-list');
-    if(!list)return;
-    if(!rows.length){list.innerHTML='<p class="mute">Niciun rezultat.</p>';return}
-    list.innerHTML=rows.map((r,i)=>`<div class="lb-row"><div class="lb-rank${i<3?' top':''}">${i+1}</div>
-      <div class="lb-info"><b>${r.nick}</b><span class="mute">cl. ${r.class} · ${r.regrets} regrete · ${r.pauses||0} pauze</span></div>
-      <div class="lb-score">${r.balance} lei</div></div>`).join('');
+    const list=document.getElementById('lb-list'); if(!list)return;
+    list.innerHTML=rows.length?rows.map((r,i)=>lbRow(r,i)).join(''):'<p class="mute">Niciun rezultat încă.</p>';
   };
-  document.getElementById('lb-f').onchange=render;
+  const sel=document.getElementById('lb-f'); if(sel)sel.onchange=render;
   render();
 }
 
-cur&&users[cur]?home():login();
+async function leaderboard(){
+  tab='lb';
+  $.innerHTML=head()+`<div class="pad"><div class="card"><h3>Clasament public</h3>
+    <p class="mute" id="lb-st">Se încarcă…</p>
+    <select id="lb-f"><option value="all">Toate clasele</option><option value="9">a IX-a</option><option value="10">a X-a</option><option value="11">a XI-a</option><option value="12">a XII-a</option></select>
+    <div id="lb-list" style="margin-top:8px"></div>
+  </div>
+  <div class="card"><h3>Cum apar aici?</h3>
+    <p class="mute">1) Termini runda · 2) apeși „Publică scorul” (vizibil pe acest dispozitiv) · 3) trimiți codul organizatorului ca să intre în <code>results.json</code> pe site pentru toată lumea.</p>
+  </div></div>`+nav();
+  await fillLeaderboard();
+}
+
+/* ===== PROFILE ===== */
+function profile(){
+  const u=U(); tab='me';
+  $.innerHTML=head()+`<div class="pad"><div class="card">
+    <h3>Profil</h3>
+    <p><b>${esc(cur)}</b> · clasa ${esc(String(u.cls||'—'))}</p>
+    <div class="statg"><div class="stat"><div class="n">${u.rounds||0}</div><div class="l">Runde</div></div>
+    <div class="stat"><div class="n">${u.best?u.best.balance:'—'}</div><div class="l">Cel mai bun sold</div></div></div>
+    <label class="chk"><input type="checkbox" id="hide" ${u.hide?'checked':''}> Nu mă arăta în clasament</label>
+    <button id="copy">Copiază codul scorului curent</button>
+    <button id="pub">Publică scorul curent</button>
+  </div>
+  <div class="card"><h3>Despre</h3>
+    <p class="mute">Produs de educație financiară: înveți prin decizii, nu prin teorie. Codul de rezultat e anonim (poreclă, clasă, sold, regrete, pauze).</p>
+  </div></div>`+nav();
+  document.getElementById('hide').onchange=e=>{u.hide=e.target.checked;save();toast(u.hide?'Ascuns din clasament':'Vizibil în clasament')};
+  document.getElementById('copy').onclick=()=>copyText(resultCode(u));
+  document.getElementById('pub').onclick=()=>publishLocal(u);
+}
+
+/* ===== ADMIN ===== */
+function admin(){
+  $.innerHTML=`<div class="admin"><h2 style="color:var(--or2)">Admin rezultate</h2>
+  <div class="card" id="adm-login"><h3>Autentificare</h3>
+    <input id="ap" type="password" placeholder="Parolă admin">
+    <button class="p" id="al">Intră</button></div>
+  <div id="adm-panel" class="hidden">
+    <div class="card"><h3>Importă coduri</h3>
+      <p class="mute">Lipește coduri de rezultat, câte unul pe linie.</p>
+      <textarea id="acodes" placeholder="eyJuaWNrIjoi..."></textarea>
+      <button class="p" id="aimp">Validează și adaugă</button>
+      <div id="alog" class="mute" style="margin-top:8px"></div>
+    </div>
+    <div class="card"><h3>Rezultate (<span id="acnt">0</span>)</h3>
+      <div id="alist" class="mute" style="max-height:200px;overflow:auto"></div>
+      <button class="p" id="adl">Descarcă results.json</button>
+      <button id="acsv">Export CSV</button>
+    </div>
+    <div class="card"><h3>Statistici</h3><div id="astats" class="statg"></div></div>
+    <button id="aex">Închide</button>
+  </div></div>`;
+  document.getElementById('al').onclick=()=>{
+    if(document.getElementById('ap').value!==ADMIN_PASS)return toast('Parolă greșită');
+    document.getElementById('adm-login').classList.add('hidden');
+    document.getElementById('adm-panel').classList.remove('hidden');
+    loadLB().then(d=>{adminRows=mergeLB(d).slice();refreshAdmin()});
+  };
+  document.getElementById('aimp').onclick=()=>{
+    const lines=document.getElementById('acodes').value.trim().split(/\n+/).filter(Boolean);
+    let ok=0,fail=0,log=[];
+    lines.forEach(line=>{
+      const o=decodeCode(line);
+      if(!o||!o.nick){fail++;log.push('Invalid');return}
+      adminRows=adminRows.filter(r=>r.nick!==o.nick);
+      adminRows.push({nick:o.nick,class:o.class,balance:o.balance,regrets:o.regrets,pauses:o.pauses,hide:!!o.hide,date:o.date,demo:false});
+      ok++;log.push('OK '+o.nick);
+    });
+    document.getElementById('alog').textContent=log.join(' · ');
+    toast(ok+' adăugate, '+fail+' eșuate');refreshAdmin();
+  };
+  document.getElementById('adl').onclick=()=>{
+    const blob=new Blob([JSON.stringify(adminRows,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='results.json';a.click();
+  };
+  document.getElementById('acsv').onclick=()=>{
+    const h='nick,class,balance,regrets,pauses,hide,date\n';
+    const rows=adminRows.map(r=>[r.nick,r.class,r.balance,r.regrets,r.pauses||0,r.hide,r.date||''].join(',')).join('\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h+rows],{type:'text/csv'}));a.download='results.csv';a.click();
+  };
+  document.getElementById('aex').onclick=()=>{location.hash='';landing()};
+}
+function refreshAdmin(){
+  document.getElementById('acnt').textContent=adminRows.length;
+  document.getElementById('alist').innerHTML=adminRows.map(r=>esc(r.nick)+' · cl.'+r.class+' · '+r.balance+' lei · '+r.regrets+' regrete').join('<br>')||'—';
+  const n=adminRows.length||1;
+  const avg=(adminRows.reduce((s,r)=>s+(r.regrets||0),0)/n).toFixed(1);
+  const fin=adminRows.length;
+  document.getElementById('astats').innerHTML=`<div class="stat"><div class="n">${fin}</div><div class="l">Participanți</div></div>
+    <div class="stat"><div class="n">${avg}</div><div class="l">Regrete medii</div></div>`;
+}
+
+/* ===== ROUTER ===== */
+function boot(){
+  if(location.hash==='#admin')return admin();
+  if(cur&&users[cur]){home()}
+  else landing();
+}
+window.addEventListener('hashchange',()=>{if(location.hash==='#admin')admin();else if(!cur)landing()});
+boot();
 </script>
 </body>
 </html>
