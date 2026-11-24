@@ -72,28 +72,8 @@ label.chk input{width:auto;margin:0}
 <div id="toast" class="toast" role="status"></div>
 <script>
 const ROUND=10, START=500, GOAL=300;
-const ADMIN_PASS='schimba-parola-admin';
-
-/* ===== BACKEND DINAMIC (Firebase Realtime Database) =====
-   1. https://console.firebase.google.com → Create project
-   2. Build → Realtime Database → Create (start in test mode for contest)
-   3. Rules (pentru concurs scurt):
-      {
-        "rules": {
-          "results": {
-            ".read": true,
-            ".write": true,
-            "$nick": {
-              ".validate": "newData.hasChildren(['nick','class','balance','regrets','pauses']) && newData.child('balance').isNumber()"
-            }
-          }
-        }
-      }
-   4. Copiază URL-ul bazei (ex: https://PROIECT-default-rtdb.europe-west1.firebasedatabase.app)
-   5. Pune-l mai jos la FIREBASE_URL (fără / la final)
-   Dacă FIREBASE_URL e gol, aplicația folosește doar localStorage (fără sync).
-*/
-const FIREBASE_URL = ''; // ex: 'https://cumpăr-sau-astept-default-rtdb.europe-west1.firebasedatabase.app'
+const ADMIN_PASS='admin';
+const FIREBASE_URL = 'https://bani-walar-default-rtdb.europe-west1.firebasedatabase.app/'; 
 
 const o=(l,d,r,t,w)=>({l,d,r,t,w});
 const P=[
