@@ -1,0 +1,10 @@
+[
+  {"nick":"demo_alex","class":"10","balance":420,"regrets":2,"pauses":4,"hide":false,"demo":true,"date":"2026-11-20"},
+  {"nick":"demo_mira","class":"11","balance":380,"regrets":3,"pauses":3,"hide":false,"demo":true,"date":"2026-11-19"},
+  {"nick":"demo_radu","class":"9","balance":310,"regrets":5,"pauses":2,"hide":false,"demo":true,"date":"2026-11-18"},
+  {"nick":"demo_ioana","class":"12","balance":450,"regrets":1,"pauses":5,"hide":false,"demo":true,"date":"2026-11-21"},
+  {"nick":"demo_andrei","class":"10","balance":290,"regrets":6,"pauses":1,"hide":false,"demo":true,"date":"2026-11-17"},
+  {"nick":"demo_elena","class":"11","balance":360,"regrets":3,"pauses":4,"hide":false,"demo":true,"date":"2026-11-20"},
+  {"nick":"demo_vlad","class":"9","balance":400,"regrets":2,"pauses":5,"hide":false,"demo":true,"date":"2026-11-22"},
+  {"nick":"demo_sofia","class":"12","balance":340,"regrets":4,"pauses":2,"hide":false,"demo":true,"date":"2026-11-16"}
+]
