@@ -46,7 +46,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--or);outline:none}
 .lb-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
 .lb-row:last-child{border:0}
 .lb-rank{width:28px;height:28px;border-radius:50%;background:var(--or-soft);color:var(--or);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
-.lb-rank.top{background:var(--or);color:#fff}
+.lb-rank.gold{background:var(--or);color:#fff}
 .lb-info{flex:1;min-width:0}.lb-info b{display:block}.lb-score{font-weight:800;white-space:nowrap}
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90%;text-align:center}
 .toast.show{opacity:1}
@@ -75,6 +75,27 @@ label.chk input{width:auto;margin:0}
 .opt.right{border-color:var(--green);background:var(--green-bg)}
 .opt.wrong{border-color:var(--red);background:var(--red-bg)}
 
+
+@media(min-width:900px){
+  body{background:#e4e4e4}
+  #app{max-width:1180px;background:var(--bg);box-shadow:0 0 40px #0002;padding-bottom:40px}
+  #app:has(.nav){display:grid;grid-template-columns:240px minmax(0,1fr);align-items:start;background:linear-gradient(90deg,#fff 0 239px,var(--line) 239px 240px,var(--bg) 240px)}
+  #app:has(.nav)>.top{grid-column:1/-1;padding:14px 32px}
+  #app:has(.nav)>.nav{grid-column:1;grid-row:2/span 6;position:sticky;top:0;bottom:auto;left:auto;right:auto;width:auto;max-width:none;margin:0;height:calc(100vh - 58px);flex-direction:column;justify-content:flex-start;border:0;background:transparent;padding:14px 0 0}
+  #app:has(.nav)>.bal,#app:has(.nav)>.pad{grid-column:2}
+  .nav button{flex:none;width:100%;flex-direction:row;justify-content:flex-start;gap:12px;padding:15px 22px;font-size:.95rem;color:var(--ink);border-radius:0}
+  .nav button svg{width:22px;height:22px}
+  .nav button.on{color:var(--or);background:var(--or-soft);box-shadow:inset 4px 0 var(--or)}
+  .bal{margin:24px 28px 0;border-radius:20px;padding:20px 28px 26px}
+  .pad{padding:24px 28px;width:100%;max-width:900px;margin:0 auto}
+  #app:has(.nav)>.pad{max-width:none;margin:0}
+  .card{padding:20px}
+  .login{max-width:460px;margin:0 auto;padding-top:70px}
+  .pub-hero{padding:56px calc((100% - 900px)/2 + 28px) 48px}
+  .pub-hero h1{font-size:2.3rem}
+  .toast{bottom:30px}
+}
+@media(max-width:899px){#app{min-height:100dvh}input,select,textarea{font-size:16px}}
 </style>
 </head>
 <body>
@@ -82,7 +103,7 @@ label.chk input{width:auto;margin:0}
 <div id="toast" class="toast" role="status"></div>
 <script>
 const ROUND=30, START=500, GOAL=300;
-const ADMIN_HASH='81379716eeedd94254ecde1bc6c48464a42f0f01e8f40bb9359d090c0d9e1e42'; // SHA-256 al parolei de admin
+const ADMIN_HASH='81379716eeedd94254ecde1bc6c48464a42f0f01e8f40bb9359d090c0d9e1e42';
 const FIREBASE_URL = 'https://bani-walar-default-rtdb.europe-west1.firebasedatabase.app/'; 
 
 const o=(l,d,r,t,w)=>({l,d,r,t,w});
@@ -119,6 +140,8 @@ const P=[
 ["Oferă-ți un „zi fără cheltuieli”. Ai mâncare acasă.",[o("Totuși cumpăr ceva mic (15 lei)",-15,1,"Ziua zero a eșuat pe un impuls."),o("Reușesc 0 lei azi",0,0,"Disciplină practică!"),o("Planific ziua fără cheltuieli",0,0,"Ai reușit prin pregătire.",1)]]
 ];
 
+const PRIZES_HTML=`<div class="card"><h3>Premii în contul de joc</h3><p style="margin:6px 0"><span class="tag" style="background:var(--or)">Nota 10</span> &nbsp;<b>15 €</b> în contul de joc</p><p style="margin:6px 0"><span class="tag">Nota 9 – 9,99</span> &nbsp;<b>10 €</b> în contul de joc</p></div>`;
+const prizeOf=n=>n>=10?15:n>=9?10:0;
 const $=document.getElementById('app');
 const LS_U='cob_users_v2', LS_C='cob_cur_v2', LS_PUB='cob_public_results';
 const J=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)||'null'):localStorage.setItem(k,JSON.stringify(v));
@@ -182,7 +205,6 @@ function publishLocal(u){
   toast('Se publică…');
   const url=FIREBASE_URL.replace(/\/$/,'')+'/results/'+encodeURIComponent(row.nick)+'.json';
   return fetch(url,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null).then(prev=>{
-    // nu suprascrie un scor de joc mai bun cu unul mai slab
     const out=(prev&&prev.nick===row.nick&&Number(prev.balance)>row.balance)?Object.assign({},prev,{final:row.final||prev.final||null,lessonProgress:row.lessonProgress,hide:row.hide,class:row.class}):row;
     return fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(out)});
   }).then(r=>{
@@ -207,7 +229,6 @@ async function fetchRemoteResults(){
   return Object.keys(data).map(k=>data[k]).filter(r=>r&&r.nick);
 }
 
-/* ===== PUBLIC LANDING (fără login) ===== */
 function landing(){
   tab='public';
   $.innerHTML=`<div class="pub-hero"><div class="logo-mark" style="background:#fff;color:var(--or)">C?</div>
@@ -238,12 +259,13 @@ function publicLeaderboard(){
   <select id="lb-f"><option value="all">Toate clasele</option><option value="9">a IX-a</option><option value="10">a X-a</option><option value="11">a XI-a</option><option value="12">a XII-a</option></select>
   <div id="lb-list" style="margin-top:8px"></div>
   <button class="p" id="go-in2" style="margin-top:16px">Vreau să particip</button>
-  </div></div>`;
+  </div>
+  ${PRIZES_HTML}
+  <div class="card"><h3>Clasament — test final</h3><p class="mute">După notă, apoi după timpul mai scurt.</p><div id="final-lb-list" style="margin-top:8px"></div></div></div>`;
   document.getElementById('go-in2').onclick=()=>login();
   fillLeaderboard();
 }
 
-/* ===== AUTH ===== */
 function login(){
   $.innerHTML=`<div class="login">
   <div class="logo-mark">C?</div>
@@ -296,7 +318,6 @@ async function doRegister(){
   newRound(users[n]);if(!users[n].createdAt)users[n].createdAt=Date.now();if(!users[n].lessons)users[n].lessons={};cur=n;err='';save();home();
 }
 
-/* ===== SHELL ===== */
 const head=()=>`<div class="top"><b>Salut, ${esc(cur)}</b><button onclick="logout()">Ieși</button></div>`;
 function nav(){
   return `<div class="nav">
@@ -309,7 +330,6 @@ function nav(){
 }
 function logout(){clearInterval(finalTick);cur=null;save();landing()}
 
-/* ===== HOME / GAME ===== */
 function home(){
   const u=U(); if(!u)return landing();
   if(u.finishedRound||u.i>=ROUND)return endR();
@@ -391,9 +411,8 @@ function endR(){
   document.getElementById('nr').onclick=()=>{newRound(u);save();home()};
 }
 
-/* ===== LEADERBOARD ===== */
 function lbRow(r,i){
-  return `<div class="lb-row"><div class="lb-rank${i<3?' top':''}">${i+1}</div>
+  return `<div class="lb-row"><div class="lb-rank${i<3?' gold':''}">${i+1}</div>
     <div class="lb-info"><b>${esc(r.nick)}</b><span class="mute">cl. ${esc(String(r.class))} · ${r.regrets} regrete · ${r.pauses||0} pauze${r.final&&r.final.nota!==undefined?' · nota finală '+Number(r.final.nota).toFixed(2):''}${r.demo?' · demo':''}</span></div>
     <div class="lb-score">${r.balance} lei</div></div>`;
 }
@@ -423,7 +442,6 @@ async function loadLB(){
       lbStatus='Firebase indisponibil — fallback local';
     }
   }
-  // 2) results.json pe GitHub Pages (static)
   try{
     const res=await fetch('data/results.json',{cache:'no-store'});
     if(!res.ok)throw new Error('x');
@@ -431,7 +449,6 @@ async function loadLB(){
     lbStatus=FIREBASE_URL?'Fallback results.json':'Clasament din results.json + publicări locale';
     return lbOfficial;
   }catch(e){}
-  // 3) doar local + demo
   lbOfficial=[];
   if(!publicList().length){
     lbOfficial=[
@@ -464,7 +481,7 @@ async function fillLeaderboard(){
     const finals=mergeLB(data).filter(r=>!r.hide&&r.final&&isFinite(Number(r.final.nota)))
       .sort((a,b)=>Number(b.final.nota)-Number(a.final.nota)||Number(a.final.duration||0)-Number(b.final.duration||0));
     const fl=document.getElementById('final-lb-list');
-    if(fl)fl.innerHTML=finals.length?finals.map((r,i)=>`<div class="lb-row"><div class="lb-rank${i<3?' top':''}">${i+1}</div><div class="lb-info"><b>${esc(r.nick)}</b><span class="mute">cl. ${esc(String(r.class))} · ${r.final.correct||0}/30 corecte</span></div><div class="lb-score">${Number(r.final.nota).toFixed(2).replace('.',',')}</div></div>`).join(''):'<p class="mute">Nimeni nu a terminat încă testul final.</p>';
+    if(fl)fl.innerHTML=finals.length?finals.map((r,i)=>`<div class="lb-row"><div class="lb-rank${i<3?' gold':''}">${i+1}</div><div class="lb-info"><b>${esc(r.nick)}</b><span class="mute">cl. ${esc(String(r.class))} · ${r.final.correct||0}/30 corecte${prizeOf(Number(r.final.nota))?' · <b style="color:var(--or2)">'+prizeOf(Number(r.final.nota))+' €</b>':''}</span></div><div class="lb-score">${Number(r.final.nota).toFixed(2).replace('.',',')}</div></div>`).join(''):'<p class="mute">Nimeni nu a terminat încă testul final.</p>';
   };
   const sel=document.getElementById('lb-f'); if(sel)sel.onchange=render;
   render();
@@ -477,6 +494,7 @@ async function leaderboard(){
     <select id="lb-f"><option value="all">Toate clasele</option><option value="9">a IX-a</option><option value="10">a X-a</option><option value="11">a XI-a</option><option value="12">a XII-a</option></select>
     <div id="lb-list" style="margin-top:8px"></div>
   </div>
+  ${PRIZES_HTML}
   <div class="card"><h3>Clasament — test final</h3>
     <p class="mute">Se ordonează după notă, iar la egalitate după timpul mai scurt.</p>
     <div id="final-lb-list" style="margin-top:8px"></div>
@@ -488,7 +506,6 @@ async function leaderboard(){
 }
 
 
-/* ===== LECȚII ȘI TESTE EDUCAȚIONALE ===== */
 const LESSONS=[
 
 {id:'buget',t:'Bugetul personal',ic:'book',s:'Cum îți planifici banii ca să ajungă — și să mai rămână.',
@@ -858,7 +875,6 @@ function drawLessonTestKeepScroll(){
   const y=window.scrollY;drawLessonTest();window.scrollTo(0,y);
 }
 
-/* ===== TEST FINAL ===== */
 const FINAL_MINUTES=40;
 function finalPage(){
   const u=U();if(!u)return landing();tab='edu';
@@ -932,7 +948,6 @@ function showFinalResult(){
   document.getElementById('to-lessons').onclick=lessons;
 }
 
-/* ===== PROFILE ===== */
 function profile(){
   const u=U(); tab='me';
   $.innerHTML=head()+`<div class="pad"><div class="card">
@@ -952,7 +967,6 @@ function profile(){
   document.getElementById('pub').onclick=()=>publishLocal(u);
 }
 
-/* ===== ADMIN ===== */
 function admin(){
   $.innerHTML=`<div class="admin"><h2 style="color:var(--or2)">Admin rezultate</h2>
   <div class="card" id="adm-login"><h3>Autentificare</h3>
@@ -1019,7 +1033,6 @@ function refreshAdmin(){
     <div class="stat"><div class="n">${avg}</div><div class="l">Regrete medii</div></div>`;
 }
 
-/* ===== ROUTER ===== */
 function boot(){
   if(location.hash==='#admin')return admin();
   if(cur&&users[cur]){const u=users[cur];if(!u.createdAt)u.createdAt=Date.now();if(!u.lessons)u.lessons={};save();home()}
